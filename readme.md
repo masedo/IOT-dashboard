@@ -1,21 +1,21 @@
 # IOT dashboard for EM500-CO2 sensor data
 
-This is a demo project to present the latest and historical sensor data of the EM500-CO2 sensor data from a Lora server.
+This is a demo project that presents the latest and historical sensor data from the EM500-CO2 sensor through a LoRa server.
 
-There are 3 components, the frontend, the backend API (used by the frontend) and the database (to manage user authentication).
+The project comprises three components: the frontend, the backend API (utilized by the frontend), and the database (to manage user authentication).
 
 
 ## Frontend
 
-The frontend application is located under "sensorwebapp".
+The frontend application is located in the "sensorwebapp" directory.
 
-- Tech stack:
-  - Typescript
-  - React
-  - Remix.run
-  - Tailwindcss
+* Tech stack:
+  * TypeScript
+  * React
+  * Remix.run
+  * Tailwind CSS
 
-Component to handle browser request. Authentication and data fetching is handled by the backend API.
+This component handles browser requests. Authentication and data fetching are managed by the backend API.
 
 Page endpoints:
 
@@ -27,7 +27,7 @@ Page endpoints:
 
 ## Backend API
 
-The backend API is located under "sensorAPI".
+The backend API is situated in the "sensorAPI" directory.
 
 * Tech stack:
   * Java
@@ -35,9 +35,9 @@ The backend API is located under "sensorAPI".
   * Gradle
   * Hibernate
 
-Component to provide data and user authentication to the frontend, making the frontend agnostic to the data source.
+This component provides data and user authentication to the frontend, making the frontend agnostic to the data source.
 
-Rest API endpoints:
+REST API endpoints:
 
 * /login
 * /invalidatetoken
@@ -45,55 +45,55 @@ Rest API endpoints:
 * /sensordata
 * /lastsensordata
 
-Authentication: User and password for /login. Token for the rest endpoints.
+Authentication involves using a username and password for /login and tokens for the rest of the endpoints.
 
 
 ## Database
 
-The database files are located under "postgres".
+The database files are found in the "postgres" directory.
 
 * Tech stack:
   * PostgreSQL
 
-Component to store users and hashed passwords, and invalidated tokens.
+This component stores users and hashed passwords, as well as invalidated tokens.
 
 
 ## Deployment to Azure
 
-To run the application in Azure, the following resources are needed:
+To deploy the application on Azure, the following resources are required:
 
 * Resource group
   * Application gateway
-    * Used to enable public access
-    * Redirects the traffic to the frontend container (also load balancer if multiple frontend containers)
+    * Enables public access
+    * Redirects traffic to the frontend container (also acts as a load balancer for multiple frontend containers)
   * Network security group
-    * Firewall to allow connectivity between:
-      * Gategay --> Frontend container
-      * Frontend container --> Backend API
-      * Backend API --> database
-  * Container instance
-    * 3 container instances, one for each component
-    * all using private network
-    * Environment variables needed for all of them for users / passwords / URLs
+    * Firewall settings allow connectivity between:
+      * Gateway → Frontend container
+      * Frontend container → Backend API
+      * Backend API → Database
+  * Container instances
+    * Three container instances, one for each component
+    * All utilize a private network
+    * Environment variables are necessary for all instances for users/passwords/URLs
   * Public IP address
-    * Used by the gateway to enable internet access to the frontend
+    * Enables internet access to the frontend through the gateway
   * Virtual network
-    * Used by the 3 containers
+    * Used by the three containers
   * Container registry
-    * Repository to store the 3 container images
+    * Repository to store the three container images
 
 
-## Others
+## Additional Information
 
-##### Run the application
+##### Running the Application
 
-Commands to run and deploy the 3 modules in containers are located in build_all.ps1
+Commands to run and deploy the three modules in containers are located in `build_all.ps1`.
 
 
 ##### Authentication
 
-For the login, the frontend calls the /login endpoint of the backend API with a user and password, receiving a temporary token to be used for the other API calls.
+For login, the frontend calls the /login endpoint of the backend API with a username and password, receiving a temporary token for other API calls.
 
-The token is stored in the browser cookies.
+The token is stored in browser cookies.
 
-Since the token mechanism is steteless, for the logout funcionallity, the
+Since the token mechanism is stateless, for the logout functionality, the backend inserts the token into the invalidated tokens table. A batch job removes invalidated tokens when they expire.
