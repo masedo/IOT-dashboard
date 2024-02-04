@@ -1,0 +1,28 @@
+# Use an official Node.js runtime as a parent image
+FROM node:20
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json (or yarn.lock) files
+COPY package*.json ./
+# If using Yarn, copy yarn.lock as well
+# COPY yarn.lock ./
+
+# Install project dependencies
+RUN npm install
+# If using Yarn, use `RUN yarn install`
+
+# Bundle app source inside the Docker image
+COPY . .
+
+# Build the project if necessary (for TypeScript)
+RUN npm run build
+# If using Yarn, use `RUN yarn build`
+
+# Your app binds to port 3000, so use the EXPOSE instruction to have it mapped by the docker daemon
+EXPOSE 3000
+
+# Define the command to run your app using CMD which defines your runtime
+CMD [ "npm", "start" ]
+# If using Yarn, use `CMD ["yarn", "start"]`
